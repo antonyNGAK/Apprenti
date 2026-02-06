@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assistant IA - Apprenti</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles/navbar-footer.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="../styles/assistant.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="navbar__container">
+            <a href="index.html" class="navbar__logo">
+                <span class="navbar__logo-icon">A</span>
+                Apprenti
+            </a>
+            <button class="navbar__toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul class="navbar__menu">
+                <li class="navbar__item">
+                    <a href="index.html" class="navbar__link">Accueil</a>
+                </li>
+                <li class="navbar__item">
+                    <a href="thematiques.html" class="navbar__link">Thématiques</a>
+                </li>
+                <li class="navbar__item">
+                    <a href="assistantAI.html" class="navbar__link">Assistant IA</a>
+                </li>
+                <li class="navbar__item">
+                    <button class="navbar__button">S'inscrire</button>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <header class="page-header">
+        <div class="page-header__meta">Apprentissage assisté</div>
+        <h1 class="page-header__title">Assistant IA</h1>
+        <p class="page-header__lead">Pose tes questions et obtiens des explications détaillées, des traductions ou des résumés.</p>
+    </header>
+
+    <main class="layout assistant-container">
+        <div class="assistant-wrapper">
+            <!-- Contexte thématique -->
+            <aside class="assistant-context" id="context-panel" style="display: none;">
+                <div class="context-header">
+                    <h3>Contexte actuel</h3>
+                    <button class="context-close" id="close-context">✕</button>
+                </div>
+                <div class="context-content" id="context-content"></div>
+            </aside>
+
+            <!-- Zone de chat -->
+            <section class="assistant-chat">
+                <div class="chat-header">
+                    <h2>Apprenti - Assistant IA</h2>
+                    <p class="chat-subtitle">Posez vos questions sur n'importe quel sujet académique</p>
+                </div>
+
+                <!-- Messages -->
+                <div class="chat-messages" id="chat-messages">
+                    <div class="message message--ai">
+                        <div class="message__avatar">A</div>
+                        <div class="message__content">
+                            <p>Bonjour ! Je suis Apprenti, votre assistant d'apprentissage IA. Comment puis-je vous aider aujourd'hui ?</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Actions rapides -->
+                <div class="quick-actions">
+                    <button class="quick-action" data-action="explain">
+                        <span class="action-label">Expliquer</span>
+                    </button>
+                    <button class="quick-action" data-action="translate">
+                        <span class="action-label">Traduire</span>
+                    </button>
+                    <button class="quick-action" data-action="tts">
+                        <span class="action-label">Lire</span>
+                    </button>
+                    <button class="quick-action" data-action="chat">
+                        <span class="action-label">Discuter</span>
+                    </button>
+                </div>
+
+                <!-- Zone de saisie -->
+                <div class="chat-input-section">
+                    <div class="input-wrapper">
+                        <textarea 
+                            id="user-input" 
+                            class="chat-input" 
+                            placeholder="Écrivez votre question... (ou collez le texte à expliquer/traduire)"
+                            rows="3"
+                        ></textarea>
+                        <button id="send-btn" class="send-button" title="Envoyer (Ctrl+Entrée)">
+                            <span>➤</span>
+                        </button>
+                    </div>
+
+                    <!-- Options supplémentaires -->
+                    <div class="chat-options">
+                        <div class="option-group">
+                            <label for="action-select">Action:</label>
+                            <select id="action-select" class="option-select">
+                                <option value="chat"> Chat</option>
+                                <option value="explain"> Expliquer</option>
+                                <option value="translate"> Traduire</option>
+                                <option value="tts"> Lire</option>
+                            </select>
+                        </div>
+
+                        <div class="option-group" id="language-group" style="display: none;">
+                            <label for="language-select">Langue:</label>
+                            <select id="language-select" class="option-select">
+                                <option value="fr">🇫🇷 Français</option>
+                                <option value="en">🇬🇧 Anglais</option>
+                                <option value="es">🇪🇸 Espagnol</option>
+                                <option value="de">🇩🇪 Allemand</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Indicateur de chargement -->
+                <div class="loading-indicator" id="loading" style="display: none;">
+                    <div class="spinner"></div>
+                    <p>Réflexion...</p>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer__container">
+            <div class="footer__grid">
+                <div>
+                    <h3 class="footer__section-title">À propos</h3>
+                    <div class="footer__section-content">
+                        <p>Apprenti est une plateforme d'apprentissage gratuite alimentée par l'API OpenAlex et OpenAI, mettant à disposition des milliers de thématiques académiques pour tous.</p>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="footer__section-title">Ressources</h3>
+                    <ul class="footer__section-list">
+                        <li><a href="thematiques.html" class="footer__link">Thématiques</a></li>
+                        <li><a href="assistantAI.html" class="footer__link">Assistant IA</a></li>
+                        <li><a href="https://openalex.org" class="footer__link">OpenAlex</a></li>
+                        <li><a href="#" class="footer__link">FAQ</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="footer__section-title">Légal</h3>
+                    <ul class="footer__section-list">
+                        <li><a href="#" class="footer__link">Conditions d'utilisation</a></li>
+                        <li><a href="#" class="footer__link">Politique de confidentialité</a></li>
+                        <li><a href="#" class="footer__link">Cookies</a></li>
+                        <li><a href="#" class="footer__link">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="footer__section-title">Nous suivre</h3>
+                    <div class="footer__social">
+                        <a href="#" class="footer__social-link" title="Twitter"></a>
+                        <a href="#" class="footer__social-link" title="GitHub"></a>
+                        <a href="#" class="footer__social-link" title="LinkedIn"></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer__divider"></div>
+
+            <div class="footer__bottom">
+                <p class="footer__copyright">© 2026 Apprenti. Tous droits réservés. | Alimenté par <a href="https://openalex.org" style="color: var(--accent);">OpenAlex</a> et <a href="https://openai.com" style="color: var(--accent);">OpenAI</a></p>
+                <div class="footer__social">
+                    <a href="#" class="footer__social-link"></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../scripts/navbar.js"></script>
+    <script src="../scripts/assistantAI.js"></script>
+</body>
+</html>
