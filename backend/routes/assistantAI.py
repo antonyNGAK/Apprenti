@@ -174,14 +174,30 @@ def register_assistant_routes(app):
 
 
 def build_system_prompt(action, context):
-    """Construire le prompt système selon l'action"""
-    base_prompt = "Tu es Apprenti, un assistant d'apprentissage expert et bienveillant. Tu aides les étudiants à mieux comprendre les concepts académiques."
+    """Construction du prompt système selon la thématique ciblée et l'action demandée"""
+    base_prompt = "Tu es Apprenti, un assistant d'apprentissage expert et bienveillant, doter d'une excéllente capacité de réflexion. Tu aides les étudiants à mieux comprendre les concepts académiques."
     
     if context.get('type') == 'thematique':
         thematique = context.get('data', {})
         titre = thematique.get('titre', '')
         description = thematique.get('description', '')
-        base_prompt += f"\n\nContexte actuel - Thématique: {titre}\nDescription: {description}"
+        domaine = thematique.get('domaine', '')
+        niveau = thematique.get('niveau', '')
+        keywords = thematique.get('keywords', [])
+        keywords_text = ', '.join(keywords) if isinstance(keywords, list) else ''
+        base_prompt += (
+            "\n\nContexte actuel - Thématique: {titre}\n"
+            "Domaine: {domaine}\n"
+            "Niveau: {niveau}\n"
+            "Description: {description}\n"
+            "Mots-clés: {keywords}"
+        ).format(
+            titre=titre,
+            domaine=domaine,
+            niveau=niveau,
+            description=description,
+            keywords=keywords_text
+        )
     
     if action == 'explain':
         base_prompt += "\n\nTon rôle: Fournir des explications détaillées, avec des exemples concrets et en langage simple."

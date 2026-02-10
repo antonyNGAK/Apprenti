@@ -82,3 +82,53 @@ def register_thematiques_routes(app):
                 'status': 'error',
                 'message': f'Erreur serveur: {str(e)}'
             }), 500
+
+    @app.route('/api/thematiques/detail', methods=['GET'])
+    def get_thematique_detail():
+        """
+        Récupère le détail d'une thématique (topic) depuis l'API OpenAlex.
+        Paramètre requis:
+        - id: identifiant OpenAlex (ex: "T123456789" ou URL OpenAlex)
+        """
+        try:
+            thematique_id = request.args.get('id', '').strip()
+            if not thematique_id:
+                return jsonify({
+                    'status': 'error',
+                    'message': 'Paramètre id manquant'
+                }), 400
+
+            # Accepter un ID simple ou une URL OpenAlex
+            if '/' in thematique_id:
+                thematique_id = thematique_id.rstrip('/').split('/')[-1]
+
+            url = f"{OPENALEX_API_URL}/topics/{thematique_id}"
+            response = requests.get(url, timeout=10)
+            response.raise_for_status()
+
+            topic = response.json()
+
+            thematique = {
+                'id': topic.get('id'),
+                'titre': topic.get('display_name', ''),
+                'description': topic.get('description', ''),
+                'keywords': topic.get('keywords', []),
+                'domaine': topic.get('domain', {}).get('display_name', 'Général') if topic.get('domain') else 'Général',
+                'niveau': 'Intermédiaire'
+            }
+
+            return jsonify({
+                'status': 'success',
+                'data': thematique
+            })
+
+        except requests.exceptions.RequestException as e:
+            return jsonify({
+                'status': 'error',
+                'message': f'Erreur lors de la récupération des données: {str(e)}'
+            }), 500
+        except Exception as e:
+            return jsonify({
+                'status': 'error',
+                'message': f'Erreur serveur: {str(e)}'
+            }), 500

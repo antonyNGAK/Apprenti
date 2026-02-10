@@ -4,6 +4,7 @@
 
 const API_URL = 'http://localhost:5000/api/assistant';
 const TTS_API_URL = 'http://localhost:5000/api/tts';
+const THEMATIQUE_DETAIL_URL = 'http://localhost:5000/api/thematiques/detail';
 
 class AssistantChat {
 	constructor() {
@@ -12,6 +13,7 @@ class AssistantChat {
 		this.messageHistory = [];
 		this.isLoading = false;
 		this.currentAudio = null;
+		this.context = null;
 		this.setupEventListeners();
 		this.loadContext();
 	}
@@ -77,19 +79,46 @@ class AssistantChat {
 		input.placeholder = placeholders[action] || placeholders['chat'];
 	}
 
-	loadContext() {
+	async loadContext() {
 		// Vérifier s'il y a un contexte de thématique
 		const iaContext = localStorage.getItem('iaContext');
 		if (iaContext) {
 			try {
 				const context = JSON.parse(iaContext);
+				this.context = context;
 				if (context.type === 'thematique') {
-					this.displayContext(context.data);
-					localStorage.removeItem('iaContext');
+					await this.ensureThematiqueDetails(context.data);
+					this.displayContext(this.context.data);
 				}
 			} catch (error) {
 				console.error('Erreur lors du chargement du contexte:', error);
 			}
+		}
+	}
+
+	async ensureThematiqueDetails(thematique) {
+		if (!thematique || !thematique.id) return;
+
+		const description = (thematique.description || '').trim();
+		if (description.length >= 10) return;
+
+		try {
+			const url = new URL(THEMATIQUE_DETAIL_URL);
+			url.searchParams.set('id', thematique.id);
+			const response = await fetch(url.toString());
+			if (!response.ok) {
+				throw new Error(`Erreur API: ${response.status}`);
+			}
+			const data = await response.json();
+			if (data.status === 'success' && data.data) {
+				this.context.data = {
+					...thematique,
+					...data.data
+				};
+				localStorage.setItem('iaContext', JSON.stringify(this.context));
+			}
+		} catch (error) {
+			console.error('Erreur lors du chargement de la thématique:', error);
 		}
 	}
 
@@ -136,7 +165,7 @@ class AssistantChat {
 
 		try {
 			// Récupérer le contexte s'il existe
-			const iaContext = JSON.parse(localStorage.getItem('iaContext') || '{}');
+			const iaContext = this.context || {};
 
 			// Envoyer la requête à l'API
 			const response = await fetch(API_URL, {
