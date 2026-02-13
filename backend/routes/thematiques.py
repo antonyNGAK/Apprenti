@@ -1,8 +1,3 @@
-"""
-Module pour la gestion des thématiques
-Intègre OpenAlex API pour récupérer les topics
-"""
-
 from flask import jsonify, request
 import requests
 
@@ -11,12 +6,12 @@ OPENALEX_API_URL = "https://api.openalex.org"
 
 
 def register_thematiques_routes(app):
-    """Enregistrer les routes des thématiques"""
+    """Enregistrement des routes des thématiques"""
     
     @app.route('/api/thematiques', methods=['GET'])
     def get_thematiques():
         """
-        Récupère les thématiques (topics) depuis l'API OpenAlex.
+        Récupération des thématiques (topics) depuis l'API OpenAlex.
         Paramètres optionnels:
         - page: numéro de page (par défaut 1)
         - per_page: résultats par page (par défaut 12, max 100)
@@ -86,7 +81,7 @@ def register_thematiques_routes(app):
     @app.route('/api/thematiques/detail', methods=['GET'])
     def get_thematique_detail():
         """
-        Récupère le détail d'une thématique (topic) depuis l'API OpenAlex.
+        Récupération du détail d'une thématique (topic) depuis l'API OpenAlex.
         Paramètre requis:
         - id: identifiant OpenAlex (ex: "T123456789" ou URL OpenAlex)
         """

@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		});
 	}
 
-	// Marquer le lien actif
+	// comportement du lien actif
 	const currentPage = window.location.pathname.split('/').pop() || 'index.html';
 	const navLinks = document.querySelectorAll('.navbar__link');
 	navLinks.forEach(link => {

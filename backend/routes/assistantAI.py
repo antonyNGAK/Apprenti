@@ -1,8 +1,3 @@
-"""
-Module pour la gestion de l'Assistant IA
-Intègre OpenAI pour les interactions conversationnelles
-"""
-
 from flask import jsonify, request, send_file
 from openai import OpenAI
 import httpx
@@ -11,7 +6,7 @@ import io
 
 
 def get_openai_client():
-    """Récupérer ou initialiser le client OpenAI"""
+    """Récupération ou initialisation du client OpenAI"""
     api_key = os.getenv('OPENAI_API_KEY')
     if not api_key:
         return None
@@ -20,12 +15,12 @@ def get_openai_client():
 
 
 def get_openai_model():
-    """Récupérer le modèle OpenAI depuis l'environnement"""
+    """Récupération du modèle OpenAI depuis l'environnement"""
     return os.getenv('OPENAI_MODEL', 'gpt-4o-mini')
 
 
 def register_assistant_routes(app):
-    """Enregistrer les routes de l'assistant IA"""
+    """Enregistrement des routes de l'assistant IA"""
     
     @app.route('/api/assistant', methods=['POST'])
     def assistant():
@@ -175,7 +170,7 @@ def register_assistant_routes(app):
 
 def build_system_prompt(action, context):
     """Construction du prompt système selon la thématique ciblée et l'action demandée"""
-    base_prompt = "Tu es Apprenti, un assistant d'apprentissage expert et bienveillant, doter d'une excéllente capacité de réflexion. Tu aides les étudiants à mieux comprendre les concepts académiques."
+    base_prompt = "Tu es Apprenti, un assistant d'apprentissage expert en partage de connaissance et bienveillant, doter d'une excéllente capacité de réflexion. Tu aides les étudiants à mieux comprendre les concepts académiques."
     
     if context.get('type') == 'thematique':
         thematique = context.get('data', {})
@@ -200,7 +195,7 @@ def build_system_prompt(action, context):
         )
     
     if action == 'explain':
-        base_prompt += "\n\nTon rôle: Fournir des explications détaillées, avec des exemples concrets et en langage simple."
+        base_prompt += "\n\nTon rôle: Fournir des explications détaillées, avec des exemples concrets et un langage simple."
     elif action == 'translate':
         base_prompt += "\n\nTon rôle: Traduire précisément tout en conservant le sens académique."
     elif action == 'tts':
